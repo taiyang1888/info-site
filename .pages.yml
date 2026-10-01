@@ -1,0 +1,62 @@
+media:
+  - name: images
+    label: 图片
+    input: public/images
+    output: /images
+  - name: files
+    label: 附件
+    input: public/files
+    output: /files
+
+content:
+  - name: posts
+    label: 信息
+    type: collection
+    path: src/content/posts
+    filename:
+      template: "{title}.md"
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: date
+        label: 日期
+        type: date
+        options:
+          format: yyyy-MM-dd
+        required: true
+      - name: category
+        label: 分类
+        type: select
+        options:
+          values:
+            - 通知
+            - 公告
+            - 资料
+        required: true
+      - name: summary
+        label: 摘要
+        type: text
+        required: true
+      - name: cover
+        label: 封面图
+        type: image
+        options:
+          media: images
+      - name: attachments
+        label: 附件
+        type: object
+        list: true
+        fields:
+          - name: name
+            label: 显示名称
+            type: string
+          - name: file
+            label: 文件
+            type: file
+            options:
+              media: files
+      - name: body
+        label: 正文
+        type: rich-text
