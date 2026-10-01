@@ -13,13 +13,17 @@ content:
     label: 信息
     type: collection
     path: src/content/posts
-    filename:
-      template: "{title}.md"
+    filename: "{slug}.md"
     fields:
       - name: title
         label: 标题
         type: string
         required: true
+      - name: slug
+        label: 英文标识
+        type: string
+        required: true
+        description: 只能用英文、数字和连字符，例如 guoqing-notice
       - name: date
         label: 日期
         type: date
