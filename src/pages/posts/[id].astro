@@ -1,0 +1,133 @@
+---
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{post.data.title}</title>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">← 返回列表</a></p>
+      <h1>{post.data.title}</h1>
+      <p class="meta">{post.data.date} · {post.data.category}</p>
+      <article>
+        {post.data.cover && (
+          <img src={post.data.cover} alt={post.data.title} class="cover" />
+        )}
+
+        <Content />
+
+        {post.data.attachments && post.data.attachments.length > 0 && (
+          <div class="attachments">
+            <h3>附件下载</h3>
+            <ul>
+              {post.data.attachments.map((file) => (
+                <li>
+                  <a href={file.file} download>{file.name}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </article>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #f7f7f7;
+    color: #222;
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    margin: 16px 0 8px;
+    font-size: 28px;
+  }
+
+  .meta {
+    color: #777;
+    font-size: 14px;
+    margin: 0 0 24px;
+  }
+
+  article {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 24px;
+    line-height: 1.8;
+  }
+
+  a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+  .cover {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .attachments {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .attachments h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+  }
+
+  .attachments ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .attachments li {
+    margin-bottom: 8px;
+  }
+
+  .attachments a {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #0066cc;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .attachments a:hover {
+    background: #0055aa;
+  }
+
+</style>

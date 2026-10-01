@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => new Date(b.data.date) - new Date(a.data.date)
+);
+---
+
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>信息发布</title>
+  </head>
+  <body>
+    <main>
+      <h1>信息发布</h1>
+      <p class="intro">这里会展示所有通知、公告和资料。</p>
+
+      <ul>
+        {posts.map((post) => (
+          <li>
+            <a href={`/posts/${post.id}/`}>
+              {post.data.cover && (
+                <img src={post.data.cover} alt={post.data.title} class="thumb" />
+              )}
+              <h2>{post.data.title}</h2>
+            </a>
+            <p class="meta">{post.data.date} · {post.data.category}</p>
+            <p class="summary">{post.data.summary}</p>
+            {post.data.attachments && (
+              <p class="files">
+                附件：{post.data.attachments.length} 个
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #f7f7f7;
+    color: #222;
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+  }
+
+  .intro {
+    color: #666;
+    margin: 0 0 28px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+
+  li h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover h2 {
+    color: #0066cc;
+  }
+
+  .meta {
+    margin: 0 0 8px;
+    color: #777;
+    font-size: 14px;
+  }
+
+  .summary {
+    margin: 0;
+    line-height: 1.6;
+  }
+  .thumb {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+
+  .files {
+    margin: 8px 0 0;
+    color: #888;
+    font-size: 13px;
+  }
+
+</style>
